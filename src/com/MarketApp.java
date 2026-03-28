@@ -1,5 +1,7 @@
 // Додаток MarketApp для формування чеку покупок
 
+// https://github.com/F2TD/MarketApp
+
 package com;
 
 import java.util.Scanner;
