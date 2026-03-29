@@ -25,45 +25,57 @@ public class MarketApp {
                 } else {
                     break;
                 }
+            }           
+            // Вибір типу продукту
+            System.out.print("Оберіть одиницю вимірювання продукту (1 - шт, 2 - кг): ");
+            String type = scanner.next();
+
+           // Вводимо кількість продукту
+            double qty;
+            if (type.equals("1")) {
+                qty = validateInt(scanner, "Введіть кількість (шт., ціле число): ");
+            } else {
+                qty = validateDouble(scanner, "Введіть вагу (кг, наприклад 1,5): ");
             }
 
-            // Валідація ціни
-            double price = 0;
-            while (true) {
-                System.out.print("Введіть ціну товару в форматі 0,00: ");
-                if (scanner.hasNextDouble()) {
-                    double inputPrice = scanner.nextDouble();
-                    if (inputPrice > 0) {
-                        // Відсікаємо все, що після 2-го знаку
-                        price = ((long)(inputPrice * 100)) / 100.0;
-                        break; 
-                    } else {
-                        System.out.println("Помилка: ціна має бути більшою за нуль!");
-                    }
-                } else {
-                    System.out.println("Помилка: введіть число через кому!");
-                    scanner.next(); 
-                }
-            }
+            // Введення ціни продукту
+            double price = validateDouble(scanner, "Введіть ціну за одиницю: ");
 
-            // Валідація кількості
-            int qty = 0;
-            while (true) {
-                System.out.print("Введіть кількість (ціле число): ");
-                if (scanner.hasNextInt()) {
-                    qty = scanner.nextInt();
-                    if (qty > 0) break;
-                    else System.out.println("Помилка: кількість має бути більшою за нуль!");
-                } else {
-                    System.out.println("Помилка: введіть ціле число!");
-                    scanner.next(); 
-                }
+            // Додавання продукту до кошика
+            if (type.equals("1")) {
+                // Виклик методу для int (для штук)
+                myCart.addProduct(name, price, (int)qty);
+            } else {
+                // Виклик методу для double (ваговий товар)
+                myCart.addProduct(name, price, qty);
             }
-
-            myCart.addProduct(new Product(name, price, qty));
-            System.out.println("Продукт '" + name + "' додано успішно.");
+            System.out.println("Товар '" + name + "' додано.");
         }
 
-        myCart.printReceipt();
+        if (!myCart.items.isEmpty()) myCart.printReceipt();
     }
-}
+    
+        // Валідація дробового числа
+        public static double validateDouble(Scanner scanner, String msg) {
+            while (true) {
+                System.out.print(msg);
+                if (scanner.hasNextDouble()) {
+                    double d = scanner.nextDouble();
+                    if (d > 0) return d;
+                } else scanner.next();
+                System.out.println("Помилка: введіть коректне число (н)");
+            }
+        }
+
+        // Валідація цілого числа
+        public static int validateInt(Scanner scanner, String msg) {
+            while (true) {
+                System.out.print(msg);
+                if (scanner.hasNextInt()) {
+                    int i = scanner.nextInt();
+                    if (i > 0) return i;
+                } else scanner.next();
+                System.out.println("Помилка: введіть ціле число!");
+            }
+        }
+    }
